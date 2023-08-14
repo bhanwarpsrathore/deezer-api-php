@@ -37,10 +37,7 @@ class Session {
      * Get the authorization URL.
      *
      * @param array|object $options Optional. Options for the authorization URL.
-     * - string code_challenge Optional. A PKCE code challenge.
-     * - array scope Optional. Scope(s) to request from the user.
-     * - boolean show_dialog Optional. Whether or not to force the user to always approve the app. Default is false.
-     * - string state Optional. A CSRF token.
+     * - array perms Optional. Permission(s) to request from the user.
      *
      * @return string The authorization URL.
      */

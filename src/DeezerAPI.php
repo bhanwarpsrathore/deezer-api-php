@@ -34,7 +34,7 @@ class DeezerAPI {
     }
 
     /**
-     * Send a request to the Spotify API, automatically refreshing the access token as needed.
+     * Send a request to the Deezer API
      *
      * @param string $method The HTTP method to use.
      * @param string $uri The URI to request.
@@ -113,7 +113,7 @@ class DeezerAPI {
      *
      * @param array|object $options Optional. Options for the playlists.
      * - int limit Optional. Limit the number of playlists.
-     * - int offset Optional. Number of playlists to skip.
+     * - int index Optional. Number of playlists to skip.
      *
      * @return array|object The user's playlists. Type is controlled by the `return_assoc` option.
      */
@@ -145,14 +145,13 @@ class DeezerAPI {
      * https://developers.deezer.com/api/playlist
      *
      * @param string $playlistId ID of the playlist.
-     * @param array|object $options Optional. Options for the playlist.
      *
      * @return array|object The user's playlist. Type is controlled by the `return_assoc` option.
      */
-    public function getPlaylist($playlistId, $options = []) {
+    public function getPlaylist($playlistId) {
         $uri = '/playlist/' . $playlistId;
 
-        $options = (array) $options;
+        $options = [];
         $options['access_token'] = $this->accessToken;
 
         $this->lastResponse = $this->sendRequest('GET', $uri, $options);
@@ -216,12 +215,12 @@ class DeezerAPI {
 
     /**
      * Get a user's playlists.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-list-users-playlists
+     * https://developers.deezer.com/api/user/playlists
      *
-     * @param string $userId ID or URI of the user.
-     * @param array|object $options Optional. Options for the tracks.
-     * - int limit Optional. Limit the number of tracks.
-     * - int offset Optional. Number of tracks to skip.
+     * @param string $userId ID of the user.
+     * @param array|object $options Optional. Options for the playlists.
+     * - int limit Optional. Limit the number of playlists.
+     * - int index Optional. Number of playlists to skip.
      *
      * @return array|object The user's playlists. Type is controlled by the `return_assoc` option.
      */
