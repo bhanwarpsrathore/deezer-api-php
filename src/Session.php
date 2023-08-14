@@ -50,7 +50,7 @@ class Session {
         $parameters = [
             'app_id' => $this->getAppId(),
             'redirect_uri' => $this->getRedirectUri(),
-            'perms' => isset($options['perms']) ? implode(' ', $options['perms']) : 'basic_access,email',
+            'perms' => isset($options['perms']) ? implode(',', $options['perms']) : 'basic_access,email',
         ];
 
         return Request::CONNECT_URL . '/oauth/auth.php?' . http_build_query($parameters, '', '&');
