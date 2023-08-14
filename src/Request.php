@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DeezerAPI;
 
+use DeezerAPI\DeezerAPIException;
+
 class Request {
 
     public const CONNECT_URL = 'https://connect.deezer.com';
@@ -32,7 +34,6 @@ class Request {
      * @param int $status The HTTP status code, passed along to any exceptions thrown.
      *
      * @throws DeezerAPIException
-     * @throws DeezerAPIAuthException
      *
      * @return void
      */
@@ -40,24 +41,14 @@ class Request {
         $parsedBody = json_decode($body);
         $error = $parsedBody->error ?? null;
 
-        if (isset($error->message) && isset($error->status)) {
+        if (isset($error->code) && isset($error->message)) {
             // It's an API call error
-            $exception = new DeezerAPIException($error->message, $error->status);
-
-            if (isset($error->reason)) {
-                $exception->setReason($error->reason);
-            }
+            $exception = new DeezerAPIException($error->message, $error->code);
 
             throw $exception;
-        } elseif (isset($parsedBody->error_description)) {
-            // It's an auth call error
-            throw new DeezerAPIAuthException($parsedBody->error_description, $status);
-        } elseif ($body) {
-            // Something else went wrong, try to give at least some info
-            throw new DeezerAPIException($body, $status);
         } else {
             // Something went really wrong, we don't know what
-            throw new DeezerAPIException('An unknown error occurred.', $status);
+            throw new DeezerAPIException('An unknown error occurred.');
         }
     }
 
@@ -94,7 +85,6 @@ class Request {
      * @param array $headers Optional. HTTP headers.
      *
      * @throws DeezerAPIException
-     * @throws DeezerAPIAuthException
      *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by the `return_assoc` option.
@@ -115,7 +105,6 @@ class Request {
      * @param array $headers Optional. HTTP headers.
      *
      * @throws DeezerAPIException
-     * @throws DeezerAPIAuthException
      *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by the `return_assoc` option.
@@ -150,7 +139,6 @@ class Request {
      * @param array $headers Optional. HTTP headers.
      *
      * @throws DeezerAPIException
-     * @throws DeezerAPIAuthException
      *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by the `return_assoc` option.
@@ -232,7 +220,9 @@ class Request {
 
         curl_close($ch);
 
-        if ($status >= 400) {
+        if ($this->options['return_assoc'] && !empty($parsedBody['error'])) {
+            $this->handleResponseError($body, $status);
+        } elseif (!empty($parsedBody->error)) {
             $this->handleResponseError($body, $status);
         }
 
