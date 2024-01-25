@@ -1,3 +1,5 @@
+[![Packagist](https://img.shields.io/packagist/v/bhanwarpsrathore/deezer-api-php.svg)](https://packagist.org/packages/bhanwarpsrathore/deezer-api-php)
+
 # Deezer API PHP
 
 This is a PHP wrapper for [Deezer's API](https://developers.deezer.com/api). It includes the following:
