@@ -295,4 +295,20 @@ class DeezerAPI {
 
         return $this;
     }
+
+    /**
+     * Search for an artist.
+     * https://developers.deezer.com/api/artist
+     *
+     * @param string $artist_id ID of the artist.
+     *
+     * @return array|object The search results. Type is controlled by the `return_assoc` option.
+     */
+    public function getArtist(string $artist_id) {
+        $uri = '/artist/' . $artist_id;
+
+        $this->lastResponse = $this->sendRequest('GET', $uri);
+
+        return $this->lastResponse['body'];
+    }
 }
